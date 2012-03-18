@@ -2,11 +2,12 @@ import unittest
 from lxml import etree
 
 class PyToXml(object):
-    def __init__(self, root_element_name, structure):
-        self.root = etree.Element(root_element_name)
+    def __init__(self, root_name, structure):
+        self.root = etree.Element(root_name)
+        self.root_name = root_name
         self.structure = structure
 
-    def traverse(self, structure, document):
+    def traverse(self, structure, document, name):
         if type(structure) == str:
             document.text = structure
 
@@ -16,10 +17,12 @@ class PyToXml(object):
         if type(structure) == dict:
             for key, value in structure.iteritems():
                 sub = etree.SubElement(document, key)
-                self.traverse(value, sub)
+                self.traverse(value, sub, key)
+
+        return self.root
 
     def to_xml(self):
-        return self.traverse(self.structure, self.root)
+        return self.traverse(self.structure, self.root, self.root_name)
 
     def __str__(self):
         return etree.tostring(self.root)
