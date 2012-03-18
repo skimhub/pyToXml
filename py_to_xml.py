@@ -2,11 +2,13 @@ import unittest
 from lxml import etree
 
 class PyToXml(object):
+    pluralisation_map = { }
+
     def __init__(self, root_name, structure):
         self.root = etree.Element(root_name)
         self.root_name = root_name
         self.structure = structure
-
+    
     def traverse(self, structure, document, name):
         if type(structure) == str:
             document.text = structure
@@ -16,7 +18,7 @@ class PyToXml(object):
 
         if type(structure) == list:
             for value in structure:
-                sub = etree.SubElement(document, "list")
+                sub = etree.SubElement(document, self.pluralisation_map[name])
                 self.traverse(value, sub, name)
 
         if type(structure) == dict:
@@ -61,9 +63,10 @@ class TestPyToXml(unittest.TestCase):
         self.assertEqual(str(p2x), "<root><a><b>c</b></a></root>")
 
     def test_list_values(self):
-        p2x = PyToXml("root", [1, 2, 3, 4, 5])
+        p2x = PyToXml("root", { "a": [1, 2, 3] })
+        p2x.pluralisation_map = { "a": "b" }
         p2x.to_xml()
-        self.assertEqual(str(p2x), "<root><a><b>c</b></a></root>")
+        self.assertEqual(str(p2x), "<root><a><b>1</b><b>2</b><b>3</b></a></root>")
 
 if __name__ == '__main__':
     unittest.main()
