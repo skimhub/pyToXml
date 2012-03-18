@@ -7,6 +7,9 @@ class PyToXml(object):
         self.root_name = root_name
         self.structure = structure
     
+    def pluralisation(self, plural):
+        return "item"
+
     def traverse(self, structure, document, name):
         if type(structure) == str:
             document.text = structure
@@ -16,7 +19,7 @@ class PyToXml(object):
 
         if type(structure) == list:
             for value in structure:
-                sub = etree.SubElement(document, "item")
+                sub = etree.SubElement(document, self.pluralisation(name))
                 self.traverse(value, sub, name)
 
         if type(structure) == dict:
@@ -62,7 +65,6 @@ class TestPyToXml(unittest.TestCase):
 
     def test_list_values(self):
         p2x = PyToXml("root", { "a": [1, 2] })
-        p2x.pluralisation_map = { "a": "b" }
         p2x.to_xml()
 
         output = "<root><a><item>1</item><item>2</item></a></root>"
