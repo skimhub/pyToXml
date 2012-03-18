@@ -14,12 +14,15 @@ class PyToXml(object):
         if type(structure) in [ int, float ]:
             document.text = str(structure)
 
+        if type(structure) == list:
+            for value in structure:
+                sub = etree.SubElement(document, "list")
+                self.traverse(value, sub, name)
+
         if type(structure) == dict:
             for key, value in structure.iteritems():
                 sub = etree.SubElement(document, key)
                 self.traverse(value, sub, key)
-
-        return self.root
 
     def to_xml(self):
         return self.traverse(self.structure, self.root, self.root_name)
@@ -54,6 +57,11 @@ class TestPyToXml(unittest.TestCase):
 
     def test_embedded_dict_values(self):
         p2x = PyToXml("root", { "a": { "b": "c" } })
+        p2x.to_xml()
+        self.assertEqual(str(p2x), "<root><a><b>c</b></a></root>")
+
+    def test_list_values(self):
+        p2x = PyToXml("root", [1, 2, 3, 4, 5])
         p2x.to_xml()
         self.assertEqual(str(p2x), "<root><a><b>c</b></a></root>")
 
