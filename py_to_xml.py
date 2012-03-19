@@ -4,7 +4,10 @@ import unittest
 from lxml import etree
 
 class PyToXml(object):
-    def __init__(self, root_name, structure, encoding="UTF-8", xml_declaration=False):
+    """Class which allows you convert a deeply nested python structure
+    into an XML representation."""
+    def __init__(self, root_name, structure,
+                 encoding="UTF-8", xml_declaration=False):
         self.root = etree.Element(root_name)
         self.root_name = root_name
         self.structure = structure
@@ -12,9 +15,15 @@ class PyToXml(object):
         self.xml_declaration = xml_declaration
     
     def pluralisation(self, plural):
+        """Returns a string that is suitable for elements of a
+        list. Intended to be overridden for more complex pluralisation
+        logic."""
         return "item"
 
     def traverse(self, structure, document, name):
+        """Loop over the structure, convert to an etree style document
+        and apply to document. The argument name is the element name
+        of the parent.""" 
         if type(structure) in [ basestring, str, unicode ]:
             document.text = structure
 
@@ -32,9 +41,13 @@ class PyToXml(object):
                 self.traverse(value, sub, key)
 
     def encode(self):
+        """Encode the structure passed into the constructor as
+        XML. This method must be called before this object is output
+        as a string."""
         return self.traverse(self.structure, self.root, self.root_name)
 
     def __str__(self):
+        """Output the XML."""
         return etree.tostring(self.root,
                               encoding=self.encoding,
                               xml_declaration=self.xml_declaration)
