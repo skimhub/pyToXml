@@ -14,7 +14,7 @@
     p2x = PyToXml("doc", person_details)
     print p2x.encode()
 
-Yeilds:
+Yields:
 
     <doc>
       <arrests>
