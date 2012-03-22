@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+from pytoxml.pytoxml import PyToXml
 
 class TestPyToXml(unittest.TestCase):
     def test_simple_root(self):
