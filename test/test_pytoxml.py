@@ -58,7 +58,7 @@ class TestPyToXml(unittest.TestCase):
 
     def test_booleans(self):
         p2x = PyToXml("root", { "bald": True })
-        self.assertEqual(str(p2x.encode()), "<root><bald>True</bald></root>")
+        self.assertEqual(str(p2x.encode()), "<root><bald>true</bald></root>")
 
 if __name__ == '__main__':
     unittest.main()

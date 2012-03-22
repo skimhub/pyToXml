@@ -34,8 +34,11 @@ class PyToXml(object):
                 sub = etree.SubElement(document, key)
                 self.traverse(value, sub, key)
 
-        if type(structure) in [ int, float, bool ]:
+        if type(structure) in [ int, float ]:
             document.text = str(structure)
+
+        if type(structure) == bool:
+            document.text = str(structure).lower()
 
     def encode(self):
         """Encode the structure passed into the constructor as
