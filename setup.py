@@ -11,10 +11,10 @@ def read(fname):
 
 setup(
     name="pyToXml",
-    version="0.1",
+    version="0.2",
     author="Skimlinks",
     author_email="dev@skimlinks.com",
-    description=("Skimlinks python to XML library."),
+    description=("Simple Python to XML library."),
     keywords="python skimlinks xml dict array",
     url="https://github.com/skimhub/pyToXml.git",
     packages=["pytoxml"],
