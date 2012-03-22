@@ -24,9 +24,6 @@ class PyToXml(object):
         if type(structure) in [ basestring, str, unicode ]:
             document.text = structure
 
-        if type(structure) in [ int, float ]:
-            document.text = str(structure)
-
         if type(structure) == list:
             for value in structure:
                 sub = etree.SubElement(document, self.pluralisation(name))
@@ -36,6 +33,9 @@ class PyToXml(object):
             for key, value in structure.iteritems():
                 sub = etree.SubElement(document, key)
                 self.traverse(value, sub, key)
+
+        if type(structure) in [ int, float, bool ]:
+            document.text = str(structure)
 
     def encode(self):
         """Encode the structure passed into the constructor as
