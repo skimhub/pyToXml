@@ -30,6 +30,11 @@ Yeilds:
 pytoxml gives you a simple way of converting a python structure to
 XML.
 
+# Tests
+
+Run the test suite with `nosetets` (`pip install nose`) from the root
+of the project.
+
 # Pluralisation of lists
 
 By default pytoxml will use the element name `item` which is probably
