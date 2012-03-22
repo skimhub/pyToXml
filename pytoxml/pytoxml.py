@@ -1,5 +1,6 @@
 from lxml import etree
 
+
 class PyToXml(object):
     """Class which allows you convert a deeply nested python structure
     into an XML representation."""
@@ -41,7 +42,7 @@ class PyToXml(object):
             document.text = str(structure).lower()
 
         else:
-            raise Exception("Can't serialise %s" % type(structure))
+            raise TypeError("Can't serialise %s" % type(structure))
 
     def encode(self):
         """Encode the structure passed into the constructor as
