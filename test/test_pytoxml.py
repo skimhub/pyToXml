@@ -60,5 +60,9 @@ class TestPyToXml(unittest.TestCase):
         p2x = PyToXml("root", { "bald": True })
         self.assertEqual(str(p2x.encode()), "<root><bald>true</bald></root>")
 
+    def test_type_unknown(self):
+        p2x = PyToXml("root", { "unknown": Exception("Shouldn't serialise") })
+        self.assertRaises(TypeError, p2x.encode)
+
 if __name__ == '__main__':
     unittest.main()
