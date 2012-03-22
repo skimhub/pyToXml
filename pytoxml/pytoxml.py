@@ -10,7 +10,7 @@ class PyToXml(object):
         self.structure = structure
         self.encoding = encoding
         self.xml_declaration = xml_declaration
-    
+
     def pluralisation(self, plural):
         """Returns a string that is suitable for elements of a
         list. Intended to be overridden for more complex pluralisation
@@ -20,25 +20,28 @@ class PyToXml(object):
     def traverse(self, structure, document, name):
         """Loop over the structure, convert to an etree style document
         and apply to document. The argument name is the element name
-        of the parent.""" 
-        if type(structure) in [ basestring, str, unicode ]:
+        of the parent."""
+        if type(structure) in [basestring, str, unicode]:
             document.text = structure
 
-        if type(structure) == list:
+        elif type(structure) == list:
             for value in structure:
                 sub = etree.SubElement(document, self.pluralisation(name))
                 self.traverse(value, sub, name)
 
-        if type(structure) == dict:
+        elif type(structure) == dict:
             for key, value in structure.iteritems():
                 sub = etree.SubElement(document, key)
                 self.traverse(value, sub, key)
 
-        if type(structure) in [ int, float ]:
+        elif type(structure) in [int, float]:
             document.text = str(structure)
 
-        if type(structure) == bool:
+        elif type(structure) == bool:
             document.text = str(structure).lower()
+
+        else:
+            raise Exception("Can't serialise %s" % type(structure))
 
     def encode(self):
         """Encode the structure passed into the constructor as
