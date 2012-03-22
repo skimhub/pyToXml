@@ -46,5 +46,15 @@ class TestPyToXml(unittest.TestCase):
         output = "<root><a>☃</a></root>"
         self.assertEqual(str(p2x), output)
 
+    def test_xmldecloration_default_encoding(self):
+        p2x = PyToXml("root", "hi", xml_declaration=True)
+        self.assertEqual(str(p2x.encode()),
+                         "<?xml version='1.0' encoding='UTF-8'?>\n<root>hi</root>")
+
+    def test_xmldecloration_custom_encoding(self):
+        p2x = PyToXml("root", "hi", xml_declaration=True, encoding="latin1")
+        self.assertEqual(str(p2x.encode()),
+                         "<?xml version='1.0' encoding='latin1'?>\n<root>hi</root>")
+
 if __name__ == '__main__':
     unittest.main()

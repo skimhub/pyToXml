@@ -41,7 +41,9 @@ class PyToXml(object):
         """Encode the structure passed into the constructor as
         XML. This method must be called before this object is output
         as a string."""
-        return self.traverse(self.structure, self.root, self.root_name)
+        self.traverse(self.structure, self.root, self.root_name)
+
+        return self
 
     def __str__(self):
         """Output the XML."""
