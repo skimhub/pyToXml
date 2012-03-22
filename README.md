@@ -14,7 +14,7 @@
     p2x = PyToXml("doc", person_details)
     print p2x.encode()
 
-Yeilds:
+Yields:
 
     <doc>
       <arrests>
@@ -32,7 +32,7 @@ XML.
 
 # Tests
 
-Run the test suite with `nosetets` (`pip install nose`) from the root
+Run the test suite with `nosetests` (`pip install nose`) from the root
 of the project.
 
 # Pluralisation of lists
