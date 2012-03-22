@@ -60,3 +60,21 @@ Which gives:
 
 The `pluralisation` function takes `plural` as an argument which is
 the name of the direct parent element to the one you'll be creating.
+
+# Constructor Options
+
+## xml_declaration
+
+Output the XML declaration. Defaults to `False`.
+
+    p2x = PyToXml("doc", "hello", encoding="latin1", xml_declaration=True)
+    print p2x.encode()
+
+Yields:
+
+    <?xml version='1.0' encoding='latin1'?>
+    <doc>hello</doc>
+
+## encoding
+
+Which encoding system should be used to build Defaults to `UTF-8`.
