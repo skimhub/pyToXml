@@ -48,6 +48,13 @@ class TestPyToXml(unittest.TestCase):
         output = "<root><a><item>1</item><item>2</item></a></root>"
         self.assertEqual(str(p2x), output)
 
+    def test_tuple_values(self):
+        p2x = PyToXml("root", { "a": (1, 2) })
+        p2x.encode()
+
+        output = "<root><a><item>1</item><item>2</item></a></root>"
+        self.assertEqual(str(p2x), output)
+
     def test_unicode(self):
         p2x = PyToXml("root", { "a": u"\u2603" })
         p2x.encode()
