@@ -32,8 +32,24 @@ class TestPyToXml(unittest.TestCase):
         p2x.encode()
         self.assertEqual(str(p2x), "<root><a><b>c</b></a></root>")
 
+    def test_sublclassed_dict_values(self):
+        class MyDict(dict):
+            pass
+        mydict = MyDict()
+        mydict["a"] = { "b": "c" }
+        p2x = PyToXml("root", mydict)
+        p2x.encode()
+        self.assertEqual(str(p2x), "<root><a><b>c</b></a></root>")
+
     def test_list_values(self):
         p2x = PyToXml("root", { "a": [1, 2] })
+        p2x.encode()
+
+        output = "<root><a><item>1</item><item>2</item></a></root>"
+        self.assertEqual(str(p2x), output)
+
+    def test_tuple_values(self):
+        p2x = PyToXml("root", { "a": (1, 2) })
         p2x.encode()
 
         output = "<root><a><item>1</item><item>2</item></a></root>"
