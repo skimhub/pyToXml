@@ -1,3 +1,6 @@
+from types import (DictType, StringTypes, IntType, FloatType,
+                   TupleType, ListType)
+
 from lxml import etree
 
 
@@ -22,24 +25,24 @@ class PyToXml(object):
         """Loop over the structure, convert to an etree style document
         and apply to document. The argument name is the element name
         of the parent."""
-        if type(structure) in [basestring, str, unicode]:
+        if isinstance(structure, StringTypes):
             document.text = structure
 
-        elif type(structure) == list:
+        elif isinstance(structure, (ListType, TupleType)):
             for value in structure:
                 sub = etree.SubElement(document, self.pluralisation(name))
                 self.traverse(value, sub, name)
 
-        elif type(structure) == dict:
+        elif isinstance(structure, DictType):
             for key, value in structure.iteritems():
                 sub = etree.SubElement(document, key)
                 self.traverse(value, sub, key)
 
-        elif type(structure) in [int, float]:
-            document.text = str(structure)
-
         elif type(structure) == bool:
             document.text = str(structure).lower()
+
+        elif isinstance(structure, (IntType, FloatType)):
+            document.text = str(structure)
 
         else:
             raise TypeError("Can't serialise %s" % type(structure))
