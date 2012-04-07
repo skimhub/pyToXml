@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/minimal/pyToXml.png?branch=develop)](http://travis-ci.org/minimal/pyToXml)
+
 # Synopsis
 
     from pytoxml import PyToXml
