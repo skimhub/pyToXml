@@ -1,4 +1,4 @@
-from types import (DictType, StringTypes, IntType, FloatType,
+from types import (DictType, StringTypes, IntType, FloatType, LongType,
                    TupleType, ListType)
 
 from lxml import etree
@@ -41,7 +41,7 @@ class PyToXml(object):
         elif type(structure) == bool:
             document.text = str(structure).lower()
 
-        elif isinstance(structure, (IntType, FloatType)):
+        elif isinstance(structure, (IntType, FloatType, LongType)):
             document.text = str(structure)
 
         else:
