@@ -85,8 +85,6 @@ class TestPyToXml(unittest.TestCase):
         cdata = CData("<xml>is pretty</horrible>")
 
         p2x = PyToXml("a", { "b": cdata } )
-        p2x.add_type_handler(CData)
-
         self.assertEqual(str(p2x.encode()),
                          "<a><b><![CDATA[<xml>is pretty</horrible>]]></b></a>")
 
@@ -94,8 +92,6 @@ class TestPyToXml(unittest.TestCase):
         attrs = Attributes("c", { "one": "two" })
 
         p2x = PyToXml("a", { "b": attrs } )
-        p2x.add_type_handler(Attributes)
-
         self.assertEqual(str(p2x.encode()),
                          "<a><b one=\"two\">c</b></a>")
 
