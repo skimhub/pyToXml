@@ -4,6 +4,27 @@ from types import (DictType, StringTypes, IntType, FloatType, LongType,
 from lxml import etree
 
 
+class Attributes(object):
+    def __init__(self, string, attributes):
+        self.string = string
+        self.attributes = attributes
+
+    def __pytoxml__(self, structure, element, name):
+        for key, value in self.attributes.items():
+            element.set(key, value)
+
+        if self.string:
+            element.text = self.string
+
+
+class CData(object):
+    def __init__(self, string):
+        self.string = string
+
+    def __pytoxml__(self, structure, element, name):
+        element.text = etree.CDATA(unicode(self.string))
+
+
 class PyToXml(object):
     """Class which allows you convert a deeply nested python structure
     into an XML representation."""
@@ -57,7 +78,7 @@ class PyToXml(object):
     def type_builder_bool(self, structure, element, name):
         element.text = str(structure).lower()
 
-    def add_type_handler(self, typ, handler):
+    def add_type_handler(self, typ, handler=None):
         new_map = { }
         new_map[typ] = handler
 
@@ -89,7 +110,11 @@ class PyToXml(object):
         processor = self._flat_type_map.get(typ)
 
         if not processor:
-            raise TypeError("Don't know how to serialise %s." % typ)
+            # if we find a __pytoxml__ then use that
+            if hasattr(structure, "__pytoxml__"):
+                processor = structure.__pytoxml__
+            else:
+                raise TypeError("Don't know how to serialise %s." % typ)
 
         return processor(structure, element, name)
 
