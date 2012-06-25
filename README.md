@@ -78,28 +78,36 @@ encode, for example, exceptions, you might do the following:
     p2x.add_type_handler(Exception, temp_convertor)
     self.assertEqual(str(p2x.encode()), "<a><b>Should now serialise</b></a>")
 
-Another example use might be for adding CDATA functionality:
+If you give an object a `__pytoxml__` method then you don't need to
+register a handler:
 
-    class CData(object):
-        def __init__(self, string):
-            self.string = string
+    class MyException(Exception):
+        def __pytoxml__(self, structure, element, name):
+            element.text = str(self)
 
-        def __str__(self):
-            return self.string
+        p2x = PyToXml("a", { "b": MyException("Should now serialise") })
+        self.assertEqual(str(p2x.encode()), "<a><b>Should now serialise</b></a>")
 
-    def cdata_to_xml(structure, element, name):
-        element.text = etree.CDATA(str(structure))
+# CData and attributes
 
-    cdata = CData("<xml>is pretty</horrible>")
+Though it's somewhat orthogonal to the original justification of
+PyToXml, you can easily output CDATA elements and attributes:
 
-    p2x = PyToXml("a", { "b": cdata } )
-    p2x.add_type_handler(CData, cdata_to_xml)
+    from pytoxml import PyToXml
 
-    self.assertEqual(str(p2x.encode()),
-                     "<a><b><![CDATA[<xml>is pretty</horrible>]]></b></a>")
+    cdata = pytoxml.CData("<crappy>xml")
+    attributes = pytoxml.Attributes("simple text", {"one": "two"})
 
-You could do a similar thing to support attributes too, if you fancied
-it.
+    p2x = pytoxml.PyToXml("root", { "raw": cdata, "attributed": attributes })
+    p2x.encode()
+
+gives (un-formatted):
+
+    <?xml version="1.0"?>
+    <root>
+      <raw><![CDATA[<crappy>xml]]></raw>
+      <attributed one="two">simple text</attributed>
+    </root>
 
 # Constructor Options
 
