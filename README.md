@@ -78,6 +78,29 @@ encode, for example, exceptions, you might do the following:
     p2x.add_type_handler(Exception, temp_convertor)
     self.assertEqual(str(p2x.encode()), "<a><b>Should now serialise</b></a>")
 
+Another example use might be for adding CDATA functionality:
+
+    class CData(object):
+        def __init__(self, string):
+            self.string = string
+
+        def __str__(self):
+            return self.string
+
+    def cdata_to_xml(structure, document, name):
+        document.text = etree.CDATA(str(structure))
+
+    cdata = CData("<xml>is pretty</horrible>")
+
+    p2x = PyToXml("a", { "b": cdata } )
+    p2x.add_type_handler(CData, cdata_to_xml)
+
+    self.assertEqual(str(p2x.encode()),
+                     "<a><b><![CDATA[<xml>is pretty</horrible>]]></b></a>")
+
+You could do a similar thing to support attributes too, if you fancied
+it.
+
 # Constructor Options
 
 ## xml_declaration

@@ -87,6 +87,7 @@ class PyToXml(object):
         of the parent."""
         typ = type(structure)
         processor = self._flat_type_map.get(typ)
+
         if not processor:
             raise TypeError("Don't know how to serialise %s." % typ)
 
