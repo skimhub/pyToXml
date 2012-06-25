@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from pytoxml import PyToXml
+
 from lxml import etree
+from pytoxml import *
 
 class TestPyToXml(unittest.TestCase):
     def test_simple_root(self):
@@ -80,24 +81,31 @@ class TestPyToXml(unittest.TestCase):
         p2x.add_type_handler(Exception, temp_convertor)
         self.assertEqual(str(p2x.encode()), "<a><b>Should now serialise</b></a>")
 
-    def test_cdata_example(self):
-        class CData(object):
-            def __init__(self, string):
-                self.string = string
-
-            def __str__(self):
-                return self.string
-
-        def cdata_to_xml(structure, element, name):
-            element.text = etree.CDATA(str(structure))
-
+    def test_cdata(self):
         cdata = CData("<xml>is pretty</horrible>")
 
         p2x = PyToXml("a", { "b": cdata } )
-        p2x.add_type_handler(CData, cdata_to_xml)
+        p2x.add_type_handler(CData)
 
         self.assertEqual(str(p2x.encode()),
                          "<a><b><![CDATA[<xml>is pretty</horrible>]]></b></a>")
+
+    def test_attributes_with_text(self):
+        attrs = Attributes("c", { "one": "two" })
+
+        p2x = PyToXml("a", { "b": attrs } )
+        p2x.add_type_handler(Attributes)
+
+        self.assertEqual(str(p2x.encode()),
+                         "<a><b one=\"two\">c</b></a>")
+
+    def test_attributes_without_text(self):
+        attrs = Attributes(None, { "one": "two" })
+
+        p2x = PyToXml("a", { "b": attrs } )
+        p2x.add_type_handler(Attributes)
+
+        self.assertEqual(str(p2x.encode()), "<a><b one=\"two\"/></a>")
 
 if __name__ == '__main__':
     unittest.main()
