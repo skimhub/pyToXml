@@ -17,7 +17,7 @@ def read(fname):
 
 setup(
     name="pyToXml",
-    version="0.7",
+    version="0.8",
     author="Skimlinks",
     author_email="dev@skimlinks.com",
     description=("Simple Python to XML library."),
