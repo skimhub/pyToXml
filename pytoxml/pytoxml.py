@@ -38,24 +38,24 @@ class PyToXml(object):
         logic."""
         return "item"
 
-    def type_builder_list(self, structure, document, name):
+    def type_builder_list(self, structure, element, name):
         for value in structure:
-            sub = etree.SubElement(document, self.pluralisation(name))
+            sub = etree.SubElement(element, self.pluralisation(name))
             self.traverse(value, sub, name)
 
-    def type_builder_string(self, structure, document, name):
-        document.text = structure
+    def type_builder_string(self, structure, element, name):
+        element.text = structure
 
-    def type_builder_dict(self, structure, document, name):
+    def type_builder_dict(self, structure, element, name):
         for key, value in structure.iteritems():
-            sub = etree.SubElement(document, key)
+            sub = etree.SubElement(element, key)
             self.traverse(value, sub, key)
 
-    def type_builder_number(self, structure, document, name):
-        document.text = str(structure)
+    def type_builder_number(self, structure, element, name):
+        element.text = str(structure)
 
-    def type_builder_bool(self, structure, document, name):
-        document.text = str(structure).lower()
+    def type_builder_bool(self, structure, element, name):
+        element.text = str(structure).lower()
 
     def add_type_handler(self, typ, handler):
         new_map = { }
@@ -81,9 +81,9 @@ class PyToXml(object):
             BooleanType: self.type_builder_bool
         }
 
-    def traverse(self, structure, document, name):
-        """Loop over the structure, convert to an etree style document
-        and apply to document. The argument `name` is the element name
+    def traverse(self, structure, element, name):
+        """Loop over the structure, convert to an etree style element
+        and apply to element. The argument `name` is the element name
         of the parent."""
         typ = type(structure)
         processor = self._flat_type_map.get(typ)
@@ -91,7 +91,7 @@ class PyToXml(object):
         if not processor:
             raise TypeError("Don't know how to serialise %s." % typ)
 
-        return processor(structure, document, name)
+        return processor(structure, element, name)
 
     def encode(self):
         """Encode the structure passed into the constructor as
