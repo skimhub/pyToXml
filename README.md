@@ -125,6 +125,15 @@ Yields:
 
 ## encoding
 
+# Attributes on the root element
+
+    p2x = PyToXml("a", { }, root_attributes={"one": "two"} )
+    p2x.encode()
+
+gives:
+
+    <a one="two"/>
+
 Which encoding system should be used to build Defaults to `UTF-8`.
 
 # Licence
