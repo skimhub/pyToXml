@@ -73,8 +73,8 @@ class TestPyToXml(unittest.TestCase):
         self.assertRaises(TypeError, p2x.encode)
 
     def test_add_type_handler(self):
-        def temp_convertor(structure, document, name):
-            document.text = str(structure)
+        def temp_convertor(structure, element, name):
+            element.text = str(structure)
 
         p2x = PyToXml("a", { "b": Exception("Should now serialise") })
         p2x.add_type_handler(Exception, temp_convertor)
@@ -88,8 +88,8 @@ class TestPyToXml(unittest.TestCase):
             def __str__(self):
                 return self.string
 
-        def cdata_to_xml(structure, document, name):
-            document.text = etree.CDATA(str(structure))
+        def cdata_to_xml(structure, element, name):
+            element.text = etree.CDATA(str(structure))
 
         cdata = CData("<xml>is pretty</horrible>")
 
