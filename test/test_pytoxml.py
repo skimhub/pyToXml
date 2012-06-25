@@ -32,15 +32,6 @@ class TestPyToXml(unittest.TestCase):
         p2x.encode()
         self.assertEqual(str(p2x), "<root><a><b>c</b></a></root>")
 
-    def test_sublclassed_dict_values(self):
-        class MyDict(dict):
-            pass
-        mydict = MyDict()
-        mydict["a"] = { "b": "c" }
-        p2x = PyToXml("root", mydict)
-        p2x.encode()
-        self.assertEqual(str(p2x), "<root><a><b>c</b></a></root>")
-
     def test_list_values(self):
         p2x = PyToXml("root", { "a": [1, 2] })
         p2x.encode()
@@ -79,6 +70,16 @@ class TestPyToXml(unittest.TestCase):
     def test_type_unknown(self):
         p2x = PyToXml("root", { "unknown": Exception("Shouldn't serialise") })
         self.assertRaises(TypeError, p2x.encode)
+
+    def test_add_type_handler(self):
+        struck = False
+
+        def temp_convertor(structure, document, name):
+            document.text = "c"
+
+        p2x = PyToXml("a", { "b": Exception("Should now serialise") })
+        p2x.add_type_handler(Exception, temp_convertor)
+        self.assertEqual(str(p2x.encode()), "<a><b>c</b></a>")
 
 if __name__ == '__main__':
     unittest.main()
