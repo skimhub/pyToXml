@@ -103,5 +103,9 @@ class TestPyToXml(unittest.TestCase):
 
         self.assertEqual(str(p2x.encode()), "<a><b one=\"two\"/></a>")
 
+    def test_attributes_on_root(self):
+        p2x = PyToXml("a", { }, root_attributes={"one": "two"} )
+        self.assertEqual(str(p2x.encode()), "<a one=\"two\"/>")
+
 if __name__ == '__main__':
     unittest.main()
