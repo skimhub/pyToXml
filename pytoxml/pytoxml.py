@@ -29,8 +29,8 @@ class PyToXml(object):
     """Class which allows you convert a deeply nested python structure
     into an XML representation."""
     def __init__(self, root_name, structure,
-                 encoding="UTF-8", xml_declaration=False):
-        self.root = etree.Element(root_name)
+                 encoding="UTF-8", xml_declaration=False, root_attributes={}):
+        self.root = etree.Element(root_name, root_attributes)
         self.root_name = root_name
         self.structure = structure
         self.encoding = encoding
