@@ -72,14 +72,12 @@ class TestPyToXml(unittest.TestCase):
         self.assertRaises(TypeError, p2x.encode)
 
     def test_add_type_handler(self):
-        struck = False
-
         def temp_convertor(structure, document, name):
-            document.text = "c"
+            document.text = str(structure)
 
         p2x = PyToXml("a", { "b": Exception("Should now serialise") })
         p2x.add_type_handler(Exception, temp_convertor)
-        self.assertEqual(str(p2x.encode()), "<a><b>c</b></a>")
+        self.assertEqual(str(p2x.encode()), "<a><b>Should now serialise</b></a>")
 
 if __name__ == '__main__':
     unittest.main()

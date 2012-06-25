@@ -66,6 +66,18 @@ Which gives:
 The `pluralisation` function takes `plural` as an argument which is
 the name of the direct parent element to the one you'll be creating.
 
+# Custom Handlers
+
+By default pytoxml will only encode a few types, if you want to
+encode, for example, exceptions, you might do the following:
+
+    def temp_convertor(structure, document, name):
+        document.text = str(structure)
+
+    p2x = PyToXml("a", { "b": Exception("Should now serialise") })
+    p2x.add_type_handler(Exception, temp_convertor)
+    self.assertEqual(str(p2x.encode()), "<a><b>Should now serialise</b></a>")
+
 # Constructor Options
 
 ## xml_declaration
