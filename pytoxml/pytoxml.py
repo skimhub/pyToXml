@@ -20,6 +20,7 @@ class Attributes(object):
             else:
                 element.text = self.data
 
+
 class CData(object):
     def __init__(self, string):
         self.string = string
@@ -62,23 +63,23 @@ class PyToXml(object):
         logic."""
         return "item"
 
-    def type_builder_list(self, structure, element, name, pytoxml=None):
+    def type_builder_list(self, structure, element, name, pytoxml):
         for value in structure:
             sub = etree.SubElement(element, self.pluralisation(name))
             self.traverse(value, sub, name)
 
-    def type_builder_string(self, structure, element, name, pytoxml=None):
+    def type_builder_string(self, structure, element, name, pytoxml):
         element.text = structure
 
-    def type_builder_dict(self, structure, element, name, pytoxml=None):
+    def type_builder_dict(self, structure, element, name, pytoxml):
         for key, value in structure.iteritems():
             sub = etree.SubElement(element, key)
-            self.traverse(value, sub, key)
+            self.traverse(value, sub, key, pytoxml)
 
-    def type_builder_number(self, structure, element, name, pytoxml=None):
+    def type_builder_number(self, structure, element, name, pytoxml):
         element.text = str(structure)
 
-    def type_builder_bool(self, structure, element, name, pytoxml=None):
+    def type_builder_bool(self, structure, element, name, pytoxml):
         element.text = str(structure).lower()
 
     def add_type_handler(self, typ, handler=None):
@@ -116,12 +117,10 @@ class PyToXml(object):
             # if we find a __pytoxml__ then use that
             if hasattr(structure, "__pytoxml__"):
                 processor = structure.__pytoxml__
-                # Custom handlers take 'self' as an additional argument
-                return processor(structure, element, name, self)
             else:
                 raise TypeError("Don't know how to serialise %s." % typ)
 
-        return processor(structure, element, name)
+        return processor(structure, element, name, self)
 
     def encode(self):
         """Encode the structure passed into the constructor as
