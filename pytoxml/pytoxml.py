@@ -15,7 +15,7 @@ class Attributes(object):
             element.set(key, value)
 
         if self.data:
-            if isinstance(self.data, dict):
+            if isinstance(self.data, DictType):
                 pytoxml.type_builder_dict(self.data,element,name)
             else:
                 element.text = self.data
