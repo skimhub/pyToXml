@@ -16,7 +16,7 @@ class Attributes(object):
 
         if self.data:
             if isinstance(self.data, DictType):
-                pytoxml.type_builder_dict(self.data,element,name)
+                pytoxml.type_builder_dict(self.data, element, name, pytoxml)
             else:
                 element.text = self.data
 
@@ -74,7 +74,7 @@ class PyToXml(object):
     def type_builder_dict(self, structure, element, name, pytoxml):
         for key, value in structure.iteritems():
             sub = etree.SubElement(element, key)
-            self.traverse(value, sub, key, pytoxml)
+            self.traverse(value, sub, key)
 
     def type_builder_number(self, structure, element, name, pytoxml):
         element.text = str(structure)

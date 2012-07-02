@@ -74,7 +74,7 @@ class TestPyToXml(unittest.TestCase):
         self.assertRaises(TypeError, p2x.encode)
 
     def test_add_type_handler(self):
-        def temp_convertor(structure, element, name):
+        def temp_convertor(structure, element, name, pytoxml):
             element.text = str(structure)
 
         p2x = PyToXml("a", { "b": Exception("Should now serialise") })
