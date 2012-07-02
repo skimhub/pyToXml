@@ -5,23 +5,26 @@ from lxml import etree
 
 
 class Attributes(object):
-    def __init__(self, string, attributes):
-        self.string = string
+    def __init__(self, data, attributes):
+        self.data       = data
         self.attributes = attributes
 
-    def __pytoxml__(self, structure, element, name):
+    def __pytoxml__(self, structure, element, name, pytoxml):
+
         for key, value in self.attributes.items():
             element.set(key, value)
 
-        if self.string:
-            element.text = self.string
-
+        if self.data:
+            if isinstance(self.data, dict):
+                pytoxml.type_builder_dict(self.data,element,name)
+            else:
+                element.text = self.data
 
 class CData(object):
     def __init__(self, string):
         self.string = string
 
-    def __pytoxml__(self, structure, element, name):
+    def __pytoxml__(self, structure, element, name, pytoxml):
         element.text = etree.CDATA(unicode(self.string))
 
 
@@ -59,23 +62,23 @@ class PyToXml(object):
         logic."""
         return "item"
 
-    def type_builder_list(self, structure, element, name):
+    def type_builder_list(self, structure, element, name, pytoxml=None):
         for value in structure:
             sub = etree.SubElement(element, self.pluralisation(name))
             self.traverse(value, sub, name)
 
-    def type_builder_string(self, structure, element, name):
+    def type_builder_string(self, structure, element, name, pytoxml=None):
         element.text = structure
 
-    def type_builder_dict(self, structure, element, name):
+    def type_builder_dict(self, structure, element, name, pytoxml=None):
         for key, value in structure.iteritems():
             sub = etree.SubElement(element, key)
             self.traverse(value, sub, key)
 
-    def type_builder_number(self, structure, element, name):
+    def type_builder_number(self, structure, element, name, pytoxml=None):
         element.text = str(structure)
 
-    def type_builder_bool(self, structure, element, name):
+    def type_builder_bool(self, structure, element, name, pytoxml=None):
         element.text = str(structure).lower()
 
     def add_type_handler(self, typ, handler=None):
@@ -113,6 +116,8 @@ class PyToXml(object):
             # if we find a __pytoxml__ then use that
             if hasattr(structure, "__pytoxml__"):
                 processor = structure.__pytoxml__
+                # Custom handlers take 'self' as an additional argument
+                return processor(structure, element, name, self)
             else:
                 raise TypeError("Don't know how to serialise %s." % typ)
 

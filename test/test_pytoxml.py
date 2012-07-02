@@ -95,6 +95,13 @@ class TestPyToXml(unittest.TestCase):
         self.assertEqual(str(p2x.encode()),
                          "<a><b one=\"two\">c</b></a>")
 
+    def test_attributes_with_dict(self):
+        attrs = Attributes({'test': 'name'}, { "one": "two" })
+
+        p2x = PyToXml("a", { "b": attrs } )
+        self.assertEqual(str(p2x.encode()),
+                         "<a><b one=\"two\"><test>name</test></b></a>")
+
     def test_attributes_without_text(self):
         attrs = Attributes(None, { "one": "two" })
 
