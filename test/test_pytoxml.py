@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from pytoxml import PyToXml
+
+from lxml import etree
+from pytoxml import *
 
 class TestPyToXml(unittest.TestCase):
     def test_simple_root(self):
@@ -29,15 +31,6 @@ class TestPyToXml(unittest.TestCase):
 
     def test_embedded_dict_values(self):
         p2x = PyToXml("root", { "a": { "b": "c" } })
-        p2x.encode()
-        self.assertEqual(str(p2x), "<root><a><b>c</b></a></root>")
-
-    def test_sublclassed_dict_values(self):
-        class MyDict(dict):
-            pass
-        mydict = MyDict()
-        mydict["a"] = { "b": "c" }
-        p2x = PyToXml("root", mydict)
         p2x.encode()
         self.assertEqual(str(p2x), "<root><a><b>c</b></a></root>")
 
@@ -79,6 +72,47 @@ class TestPyToXml(unittest.TestCase):
     def test_type_unknown(self):
         p2x = PyToXml("root", { "unknown": Exception("Shouldn't serialise") })
         self.assertRaises(TypeError, p2x.encode)
+
+    def test_add_type_handler(self):
+        def temp_convertor(structure, element, name, pytoxml):
+            element.text = str(structure)
+
+        p2x = PyToXml("a", { "b": Exception("Should now serialise") })
+        p2x.add_type_handler(Exception, temp_convertor)
+        self.assertEqual(str(p2x.encode()), "<a><b>Should now serialise</b></a>")
+
+    def test_cdata(self):
+        cdata = CData("<xml>is pretty</horrible>")
+
+        p2x = PyToXml("a", { "b": cdata } )
+        self.assertEqual(str(p2x.encode()),
+                         "<a><b><![CDATA[<xml>is pretty</horrible>]]></b></a>")
+
+    def test_attributes_with_text(self):
+        attrs = Attributes("c", { "one": "two" })
+
+        p2x = PyToXml("a", { "b": attrs } )
+        self.assertEqual(str(p2x.encode()),
+                         "<a><b one=\"two\">c</b></a>")
+
+    def test_attributes_with_dict(self):
+        attrs = Attributes({'test': 'name'}, { "one": "two" })
+
+        p2x = PyToXml("a", { "b": attrs } )
+        self.assertEqual(str(p2x.encode()),
+                         "<a><b one=\"two\"><test>name</test></b></a>")
+
+    def test_attributes_without_text(self):
+        attrs = Attributes(None, { "one": "two" })
+
+        p2x = PyToXml("a", { "b": attrs } )
+        p2x.add_type_handler(Attributes)
+
+        self.assertEqual(str(p2x.encode()), "<a><b one=\"two\"/></a>")
+
+    def test_attributes_on_root(self):
+        p2x = PyToXml("a", { }, root_attributes={"one": "two"} )
+        self.assertEqual(str(p2x.encode()), "<a one=\"two\"/>")
 
 if __name__ == '__main__':
     unittest.main()

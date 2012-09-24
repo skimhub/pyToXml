@@ -68,6 +68,49 @@ Which gives:
 The `pluralisation` function takes `plural` as an argument which is
 the name of the direct parent element to the one you'll be creating.
 
+# Custom Handlers
+
+By default pytoxml will only encode a few types, if you want to
+encode, for example, exceptions, you might do the following:
+
+    def temp_convertor(structure, element, name):
+        element.text = str(structure)
+
+    p2x = PyToXml("a", { "b": Exception("Should now serialise") })
+    p2x.add_type_handler(Exception, temp_convertor)
+    self.assertEqual(str(p2x.encode()), "<a><b>Should now serialise</b></a>")
+
+If you give an object a `__pytoxml__` method then you don't need to
+register a handler:
+
+    class MyException(Exception):
+        def __pytoxml__(self, structure, element, name):
+            element.text = str(self)
+
+        p2x = PyToXml("a", { "b": MyException("Should now serialise") })
+        self.assertEqual(str(p2x.encode()), "<a><b>Should now serialise</b></a>")
+
+# CData and attributes
+
+Though it's somewhat orthogonal to the original justification of
+PyToXml, you can easily output CDATA elements and attributes:
+
+    from pytoxml import PyToXml
+
+    cdata = pytoxml.CData("<crappy>xml")
+    attributes = pytoxml.Attributes("simple text", {"one": "two"})
+
+    p2x = pytoxml.PyToXml("root", { "raw": cdata, "attributed": attributes })
+    p2x.encode()
+
+gives (un-formatted):
+
+    <?xml version="1.0"?>
+    <root>
+      <raw><![CDATA[<crappy>xml]]></raw>
+      <attributed one="two">simple text</attributed>
+    </root>
+
 # Constructor Options
 
 ## xml_declaration
@@ -83,6 +126,15 @@ Yields:
     <doc>hello</doc>
 
 ## encoding
+
+# Attributes on the root element
+
+    p2x = PyToXml("a", { }, root_attributes={"one": "two"} )
+    p2x.encode()
+
+gives:
+
+    <a one="two"/>
 
 Which encoding system should be used to build Defaults to `UTF-8`.
 
