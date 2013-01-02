@@ -1,7 +1,7 @@
-from types import (DictType, StringTypes, IntType, FloatType, LongType,
-                   TupleType, ListType, BooleanType)
+from __future__ import unicode_literals, absolute_import
 
 from lxml import etree
+import six
 
 
 class Attributes(object):
@@ -15,7 +15,7 @@ class Attributes(object):
             element.set(key, value)
 
         if self.data:
-            if isinstance(self.data, DictType):
+            if isinstance(self.data, dict):
                 pytoxml.type_builder_dict(self.data, element, name, pytoxml)
             else:
                 element.text = self.data
@@ -26,7 +26,7 @@ class CData(object):
         self.string = string
 
     def __pytoxml__(self, structure, element, name, pytoxml):
-        element.text = etree.CDATA(unicode(self.string))
+        element.text = etree.CDATA(self.string)
 
 
 class PyToXml(object):
@@ -49,7 +49,7 @@ class PyToXml(object):
 
         for typ, outputter in type_func_map.items():
             # there might be tuples thanks to things like StringTypes
-            if isinstance(typ, TupleType):
+            if isinstance(typ, tuple):
                 for subtype in typ:
                     type_list[subtype] = outputter
             else:
@@ -72,7 +72,7 @@ class PyToXml(object):
         element.text = structure
 
     def type_builder_dict(self, structure, element, name, pytoxml):
-        for key, value in structure.iteritems():
+        for key, value in six.iteritems(structure):
             sub = etree.SubElement(element, key)
             self.traverse(value, sub, key)
 
@@ -86,24 +86,24 @@ class PyToXml(object):
         new_map = { }
         new_map[typ] = handler
 
-        self._flat_type_map = dict(self._flat_type_map.items()
-                                   + self.build_flat_type_map(new_map).items())
+        self._flat_type_map = dict(list(self._flat_type_map.items())
+                                   + list(self.build_flat_type_map(new_map).items()))
 
     def type_map(self):
         return {
             # lists
-            ListType: self.type_builder_list,
-            TupleType: self.type_builder_list,
+            list: self.type_builder_list,
+            tuple: self.type_builder_list,
 
             # numerical
-            IntType: self.type_builder_number,
-            FloatType: self.type_builder_number,
-            LongType: self.type_builder_number,
+            int: self.type_builder_number,
+            float: self.type_builder_number,
 
             # other
-            StringTypes: self.type_builder_string,
-            DictType: self.type_builder_dict,
-            BooleanType: self.type_builder_bool
+            str: self.type_builder_string,
+            type(u""): self.type_builder_string,
+            dict: self.type_builder_dict,
+            bool: self.type_builder_bool,
         }
 
     def traverse(self, structure, element, name):
@@ -132,6 +132,8 @@ class PyToXml(object):
 
     def __str__(self):
         """Output the XML."""
-        return etree.tostring(self.root,
-                              encoding=self.encoding,
-                              xml_declaration=self.xml_declaration)
+        st = etree.tostring(self.root,
+                            encoding=self.encoding,
+                            xml_declaration=self.xml_declaration)
+
+        return st.decode(self.encoding)

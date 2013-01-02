@@ -26,6 +26,7 @@ setup(
     packages=["pytoxml"],
     long_description=read('README.md'),
     install_requires=[
-        "lxml==2.3.3"
+        "lxml==3.0.2",
+        "six",
     ]
 )

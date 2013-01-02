@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/skimhub/pyToXml.png?branch=develop)](http://travis-ci.org/skimhub/pyToXml)
+[![Build Status](https://secure.travis-ci.org/skimhub/pyToXml.png?branch=master)](http://travis-ci.org/skimhub/pyToXml)
 
 # Synopsis
 
