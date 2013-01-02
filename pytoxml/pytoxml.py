@@ -1,5 +1,4 @@
-from types import (DictType, StringTypes, IntType, FloatType, LongType,
-                   TupleType, ListType, BooleanType)
+from __future__ import unicode_literals
 
 from lxml import etree
 
@@ -15,7 +14,7 @@ class Attributes(object):
             element.set(key, value)
 
         if self.data:
-            if isinstance(self.data, DictType):
+            if isinstance(self.data, dict):
                 pytoxml.type_builder_dict(self.data, element, name, pytoxml)
             else:
                 element.text = self.data
@@ -49,7 +48,7 @@ class PyToXml(object):
 
         for typ, outputter in type_func_map.items():
             # there might be tuples thanks to things like StringTypes
-            if isinstance(typ, TupleType):
+            if isinstance(typ, tuple):
                 for subtype in typ:
                     type_list[subtype] = outputter
             else:
@@ -92,18 +91,18 @@ class PyToXml(object):
     def type_map(self):
         return {
             # lists
-            ListType: self.type_builder_list,
-            TupleType: self.type_builder_list,
+            list: self.type_builder_list,
+            tuple: self.type_builder_list,
 
             # numerical
-            IntType: self.type_builder_number,
-            FloatType: self.type_builder_number,
-            LongType: self.type_builder_number,
+            int: self.type_builder_number,
+            float: self.type_builder_number,
 
             # other
-            StringTypes: self.type_builder_string,
-            DictType: self.type_builder_dict,
-            BooleanType: self.type_builder_bool
+            str: self.type_builder_string,
+            type(u""): self.type_builder_string,
+            dict: self.type_builder_dict,
+            bool: self.type_builder_bool,
         }
 
     def traverse(self, structure, element, name):
