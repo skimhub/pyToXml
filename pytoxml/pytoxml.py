@@ -25,7 +25,7 @@ class CData(object):
     def __init__(self, string):
         self.string = string
 
-    def __pytoxml__(self, structure, element, name, pytoxml):\
+    def __pytoxml__(self, structure, element, name, pytoxml):
         element.text = etree.CDATA(self.string)
 
 
@@ -136,7 +136,4 @@ class PyToXml(object):
                             encoding=self.encoding,
                             xml_declaration=self.xml_declaration)
 
-        if six.PY3:  # 3 is all unicode
-            return str(st, self.encoding)
-
-        return st
+        return st.decode(self.encoding)

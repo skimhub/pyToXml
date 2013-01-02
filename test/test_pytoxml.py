@@ -55,9 +55,7 @@ class TestPyToXml(unittest.TestCase):
         p2x.encode()
 
         output = u"<root><a>☃</a></root>"
-        if not six.PY3:
-            output = output.encode("utf-8")
-        self.assertEqual(str(p2x), output)
+        self.assertEqual(six.text_type(p2x), output)
 
     def test_xmldecloration_default_encoding(self):
         p2x = PyToXml("root", "hi", xml_declaration=True)
