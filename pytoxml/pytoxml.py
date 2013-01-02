@@ -1,4 +1,6 @@
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
+import sys
+MAJOR_VERSION = sys.version_info[0]
 
 from lxml import etree
 
@@ -24,8 +26,8 @@ class CData(object):
     def __init__(self, string):
         self.string = string
 
-    def __pytoxml__(self, structure, element, name, pytoxml):
-        element.text = etree.CDATA(unicode(self.string))
+    def __pytoxml__(self, structure, element, name, pytoxml):\
+        element.text = etree.CDATA(self.string)
 
 
 class PyToXml(object):
@@ -71,7 +73,11 @@ class PyToXml(object):
         element.text = structure
 
     def type_builder_dict(self, structure, element, name, pytoxml):
-        for key, value in structure.iteritems():
+        if MAJOR_VERSION == 3:
+            items = structure.items()
+        else:
+            items = structure.iteritems()
+        for key, value in items:
             sub = etree.SubElement(element, key)
             self.traverse(value, sub, key)
 
@@ -85,8 +91,8 @@ class PyToXml(object):
         new_map = { }
         new_map[typ] = handler
 
-        self._flat_type_map = dict(self._flat_type_map.items()
-                                   + self.build_flat_type_map(new_map).items())
+        self._flat_type_map = dict(list(self._flat_type_map.items())
+                                   + list(self.build_flat_type_map(new_map).items()))
 
     def type_map(self):
         return {
@@ -131,6 +137,12 @@ class PyToXml(object):
 
     def __str__(self):
         """Output the XML."""
-        return etree.tostring(self.root,
-                              encoding=self.encoding,
-                              xml_declaration=self.xml_declaration)
+        st = etree.tostring(self.root,
+                            encoding=self.encoding,
+                            xml_declaration=self.xml_declaration)
+
+        if MAJOR_VERSION == 3:
+            # 3 is all unicode
+            return str(st, self.encoding)
+
+        return st

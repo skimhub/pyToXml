@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import unicode_literals, absolute_import
 import unittest
+import sys
+MAJOR_VERSION = sys.version_info[0]
 
-from lxml import etree
-from pytoxml import *
+from pytoxml import PyToXml, Attributes, CData
+
 
 class TestPyToXml(unittest.TestCase):
     def test_simple_root(self):
@@ -52,7 +54,9 @@ class TestPyToXml(unittest.TestCase):
         p2x = PyToXml("root", { "a": u"\u2603" })
         p2x.encode()
 
-        output = "<root><a>☃</a></root>"
+        output = u"<root><a>☃</a></root>"
+        if MAJOR_VERSION == 2:
+            output = output.encode("utf-8")
         self.assertEqual(str(p2x), output)
 
     def test_xmldecloration_default_encoding(self):
@@ -79,6 +83,7 @@ class TestPyToXml(unittest.TestCase):
 
         p2x = PyToXml("a", { "b": Exception("Should now serialise") })
         p2x.add_type_handler(Exception, temp_convertor)
+
         self.assertEqual(str(p2x.encode()), "<a><b>Should now serialise</b></a>")
 
     def test_cdata(self):
