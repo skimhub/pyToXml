@@ -1,8 +1,7 @@
 from __future__ import unicode_literals, absolute_import
-import sys
-MAJOR_VERSION = sys.version_info[0]
 
 from lxml import etree
+import six
 
 
 class Attributes(object):
@@ -73,11 +72,7 @@ class PyToXml(object):
         element.text = structure
 
     def type_builder_dict(self, structure, element, name, pytoxml):
-        if MAJOR_VERSION == 3:
-            items = structure.items()
-        else:
-            items = structure.iteritems()
-        for key, value in items:
+        for key, value in six.iteritems(structure):
             sub = etree.SubElement(element, key)
             self.traverse(value, sub, key)
 
@@ -141,8 +136,7 @@ class PyToXml(object):
                             encoding=self.encoding,
                             xml_declaration=self.xml_declaration)
 
-        if MAJOR_VERSION == 3:
-            # 3 is all unicode
+        if six.PY3:  # 3 is all unicode
             return str(st, self.encoding)
 
         return st

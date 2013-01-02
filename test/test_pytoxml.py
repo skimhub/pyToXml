@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 import unittest
-import sys
-MAJOR_VERSION = sys.version_info[0]
+
+import six
 
 from pytoxml import PyToXml, Attributes, CData
 
@@ -55,7 +55,7 @@ class TestPyToXml(unittest.TestCase):
         p2x.encode()
 
         output = u"<root><a>☃</a></root>"
-        if MAJOR_VERSION == 2:
+        if not six.PY3:
             output = output.encode("utf-8")
         self.assertEqual(str(p2x), output)
 

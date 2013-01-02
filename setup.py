@@ -27,5 +27,6 @@ setup(
     long_description=read('README.md'),
     install_requires=[
         "lxml==3.0.2",
+        "six",
     ]
 )
