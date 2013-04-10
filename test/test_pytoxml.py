@@ -129,7 +129,7 @@ class TestPyToXml(unittest.TestCase):
 
         p2x = PyToXml("root", {"a": u"\u001a"}, escape_illegal_chars=True)
         text = p2x.encode()
-        assert str(text) == "<root><a>?</a></root>"
+        assert str(text) == "<root><a></a></root>"
 
 
 if __name__ == '__main__':
