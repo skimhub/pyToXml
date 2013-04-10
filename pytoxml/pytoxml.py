@@ -152,5 +152,5 @@ _illegal_xml_chars_RE = re.compile(
     u'[\x00-\x08\x0b\x0c\x0e-\x1F\uD800-\uDFFF\uFFFE\uFFFF]')
 
 
-def escape_xml_illegal_chars(val, replacement='?'):
+def escape_xml_illegal_chars(val, replacement=''):
     return _illegal_xml_chars_RE.sub(replacement, val)
