@@ -6,6 +6,7 @@ except:
     import unittest
 
 import six
+import pytest
 
 from pytoxml import PyToXml, Attributes, CData
 
@@ -120,10 +121,15 @@ class TestPyToXml(unittest.TestCase):
         p2x = PyToXml("a", { }, root_attributes={"one": "two"} )
         self.assertEqual(str(p2x.encode()), "<a one=\"two\"/>")
 
-    @unittest.expectedFailure
     def test_illegal_unicode(self):
-        p2x = PyToXml("root", { "a": u"\u001a" })
-        p2x.encode()
+        "Illegal unicode errors unless told to excape"
+        p2x = PyToXml("root", {"a": u"\u001a"})
+        with pytest.raises(ValueError):
+            p2x.encode()
+
+        p2x = PyToXml("root", {"a": u"\u001a"}, escape_illegal_chars=True)
+        text = p2x.encode()
+        assert str(text) == "<root><a>?</a></root>"
 
 
 if __name__ == '__main__':

@@ -1,4 +1,5 @@
 from __future__ import unicode_literals, absolute_import
+import re
 
 from lxml import etree
 import six
@@ -33,12 +34,14 @@ class PyToXml(object):
     """Class which allows you convert a deeply nested python structure
     into an XML representation."""
     def __init__(self, root_name, structure,
-                 encoding="UTF-8", xml_declaration=False, root_attributes={}):
+                 encoding="UTF-8", xml_declaration=False, root_attributes={},
+                 escape_illegal_chars=False):
         self.root = etree.Element(root_name, root_attributes)
         self.root_name = root_name
         self.structure = structure
         self.encoding = encoding
         self.xml_declaration = xml_declaration
+        self.escape_illegal_chars = escape_illegal_chars
 
         self._flat_type_map = self.build_flat_type_map(self.type_map())
 
@@ -69,7 +72,13 @@ class PyToXml(object):
             self.traverse(value, sub, name)
 
     def type_builder_string(self, structure, element, name, pytoxml):
-        element.text = structure
+        if self.escape_illegal_chars:
+            try:
+                element.text = structure
+            except ValueError:
+                element.text = escape_xml_illegal_chars(structure)
+        else:
+            element.text = structure
 
     def type_builder_dict(self, structure, element, name, pytoxml):
         for key, value in six.iteritems(structure):
@@ -137,3 +146,11 @@ class PyToXml(object):
                             xml_declaration=self.xml_declaration)
 
         return st.decode(self.encoding)
+
+
+_illegal_xml_chars_RE = re.compile(
+    u'[\x00-\x08\x0b\x0c\x0e-\x1F\uD800-\uDFFF\uFFFE\uFFFF]')
+
+
+def escape_xml_illegal_chars(val, replacement='?'):
+    return _illegal_xml_chars_RE.sub(replacement, val)
