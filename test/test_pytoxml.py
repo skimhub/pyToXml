@@ -122,7 +122,7 @@ class TestPyToXml(unittest.TestCase):
         self.assertEqual(str(p2x.encode()), "<a one=\"two\"/>")
 
     def test_illegal_unicode(self):
-        "Illegal unicode errors unless told to excape"
+        "Illegal unicode errors unless told to escape"
         p2x = PyToXml("root", {"a": u"\u001a"})
         with pytest.raises(ValueError):
             p2x.encode()
