@@ -6,5 +6,6 @@ python:
 # command to install dependencies
 install:
   - pip install . --use-mirrors
+  - pip install unittest2
 # command to run tests
 script: py.test
