@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
-import unittest
+import unittest2 as unittest
 
 import six
 
@@ -116,6 +116,12 @@ class TestPyToXml(unittest.TestCase):
     def test_attributes_on_root(self):
         p2x = PyToXml("a", { }, root_attributes={"one": "two"} )
         self.assertEqual(str(p2x.encode()), "<a one=\"two\"/>")
+
+    @unittest.expectedFailure
+    def test_illegal_unicode(self):
+        p2x = PyToXml("root", { "a": u"\u001a" })
+        p2x.encode()
+
 
 if __name__ == '__main__':
     unittest.main()
