@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
-import unittest
+try:
+    import unittest2 as unittest
+except:
+    import unittest
 
 import six
+import pytest
 
 from pytoxml import PyToXml, Attributes, CData
 
@@ -122,6 +126,17 @@ class TestPyToXml(unittest.TestCase):
     def test_attributes_on_root(self):
         p2x = PyToXml("a", { }, root_attributes={"one": "two"} )
         self.assertEqual(str(p2x.encode()), "<a one=\"two\"/>")
+
+    def test_illegal_unicode(self):
+        "Illegal unicode errors unless told to escape"
+        p2x = PyToXml("root", {"a": u"\u001a"})
+        with pytest.raises(ValueError):
+            p2x.encode()
+
+        p2x = PyToXml("root", {"a": u"\u001a"}, escape_illegal_chars=True)
+        text = p2x.encode()
+        assert str(text) == "<root><a></a></root>"
+
 
 if __name__ == '__main__':
     unittest.main()
