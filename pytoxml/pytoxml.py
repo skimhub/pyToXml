@@ -90,14 +90,12 @@ class PyToXml(object):
                                    + list(self.build_flat_type_map(new_map).items()))
 
     def type_map(self):
-        return {
+        type_map =  {
             # lists
             list: self.type_builder_list,
             tuple: self.type_builder_list,
 
             # numerical
-            int: self.type_builder_number,
-            long: self.type_builder_number,
             float: self.type_builder_number,
 
             # other
@@ -106,6 +104,12 @@ class PyToXml(object):
             dict: self.type_builder_dict,
             bool: self.type_builder_bool,
         }
+
+        # Support v2.x and 3.x integer types
+        for six_type in six.integer_types:
+            type_map[six_type] = self.type_builder_number
+
+        return type_map
 
     def traverse(self, structure, element, name):
         """Loop over the structure, convert to an etree style element
