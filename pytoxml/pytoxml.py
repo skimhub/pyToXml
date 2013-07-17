@@ -97,6 +97,7 @@ class PyToXml(object):
 
             # numerical
             int: self.type_builder_number,
+            long: self.type_builder_number,
             float: self.type_builder_number,
 
             # other
