@@ -21,6 +21,11 @@ class TestPyToXml(unittest.TestCase):
         p2x.encode()
         self.assertEqual(str(p2x), "<root><one>2</one></root>")
 
+    def test_long_values(self):
+        p2x = PyToXml("root", { "one": 2L })
+        p2x.encode()
+        self.assertEqual(str(p2x), "<root><one>2</one></root>")
+
     def test_float_values(self):
         p2x = PyToXml("root", { "one": 2.3 })
         p2x.encode()
