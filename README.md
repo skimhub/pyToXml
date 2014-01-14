@@ -1,5 +1,6 @@
 [![Build Status](https://secure.travis-ci.org/skimhub/pyToXml.png?branch=master)](http://travis-ci.org/skimhub/pyToXml)
-
+[![Downloads](https://pypip.in/d/pyToXml/badge.png)](https://pypi.python.org/pypi/pyToXml/)
+[![Latest Version](https://pypip.in/v/pyToXml/badge.png)](https://pypi.python.org/pypi/pyToXml/)
 # Synopsis
 
     from pytoxml import PyToXml
