@@ -34,7 +34,7 @@ XML.
 
 # Tests
 
-Run the test suite with `nosetests` (`pip install nose`) from the root
+Run the test suite with `py.test` (`pip install pytest`) from the root
 of the project.
 
 # Pluralisation of lists
@@ -140,7 +140,7 @@ Which encoding system should be used to build Defaults to `UTF-8`.
 
 # Licence
 
-Copyright (C) 2012 Skimbit LTD.
+Copyright (C) 2012-2014 Skimbit LTD.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
