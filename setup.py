@@ -17,12 +17,12 @@ def read(fname):
 
 setup(
     name="pyToXml",
-    version="1.0.0",
+    version="1.1.0",
     author="Skimlinks",
     author_email="dev@skimlinks.com",
     description=("Simple Python to XML library."),
     keywords="python skimlinks xml dict array",
-    url="https://github.com/skimhub/pyToXml.git",
+    url="https://github.com/skimhub/pyToXml",
     packages=["pytoxml"],
     long_description=read('README.md'),
     install_requires=[
