@@ -56,7 +56,7 @@ to determine the best phrase for a list element:
         }
 
         def pluralisation(self, plural):
-            return pluralisation_map.get(plural, "item")
+            return self.pluralisation_map.get(plural, "item")
 
     p2x = BetterListsDemo("doc", person_details)
     print p2x.encode()
