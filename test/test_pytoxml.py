@@ -25,6 +25,12 @@ class TestPyToXml(unittest.TestCase):
         p2x.encode()
         self.assertEqual(str(p2x), "<root><one>2</one></root>")
 
+    def test_six_integer_types(self):
+        for six_type in six.integer_types:
+            p2x = PyToXml("root", { "one": six_type(2) })
+            p2x.encode()
+            self.assertEqual(str(p2x), "<root><one>2</one></root>")
+
     def test_float_values(self):
         p2x = PyToXml("root", { "one": 2.3 })
         p2x.encode()

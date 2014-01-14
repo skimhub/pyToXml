@@ -99,13 +99,12 @@ class PyToXml(object):
                                    + list(self.build_flat_type_map(new_map).items()))
 
     def type_map(self):
-        return {
+        type_map =  {
             # lists
             list: self.type_builder_list,
             tuple: self.type_builder_list,
 
             # numerical
-            int: self.type_builder_number,
             float: self.type_builder_number,
 
             # other
@@ -114,6 +113,12 @@ class PyToXml(object):
             dict: self.type_builder_dict,
             bool: self.type_builder_bool,
         }
+
+        # Support v2.x and 3.x integer types
+        for six_type in six.integer_types:
+            type_map[six_type] = self.type_builder_number
+
+        return type_map
 
     def traverse(self, structure, element, name):
         """Loop over the structure, convert to an etree style element
@@ -149,7 +154,7 @@ class PyToXml(object):
 
 
 _illegal_xml_chars_RE = re.compile(
-    u'[\x00-\x08\x0b\x0c\x0e-\x1F\uD800-\uDFFF\uFFFE\uFFFF]')
+    u'[\xad\xc2\x00-\x08\x0b\x0c\x0e-\x1F\uD800-\uDFFF\uFFFE\uFFFF]')
 
 
 def escape_xml_illegal_chars(val, replacement=''):
