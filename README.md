@@ -51,12 +51,12 @@ not what you want. Here's a simple example of how you might use a map
 to determine the best phrase for a list element:
 
     class BetterListsDemo(PyToXml):
-        def pluralisation(self, plural):
-            pluralisation_map = {
-                "arrests": "arrest"
-            }
+        pluralisation_map = {
+            "arrests": "arrest"
+        }
 
-            return pluralisation_map.get(plural) or "item"
+        def pluralisation(self, plural):
+            return pluralisation_map.get(plural, "item")
 
     p2x = BetterListsDemo("doc", person_details)
     print p2x.encode()
