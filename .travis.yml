@@ -5,7 +5,10 @@ python:
   - 3.3
 # command to install dependencies
 install:
-  - pip install . --use-mirrors
+  - pip install .
   - "if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2; fi"
-# command to run tests
-script: py.test
+before_script:
+  - pip install pytest-cov
+script: py.test --cov pytoxml --cov-report term-missing
+after_success:
+  - coveralls
