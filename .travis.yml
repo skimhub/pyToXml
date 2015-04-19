@@ -6,7 +6,7 @@ python:
   - 3.4
 # command to install dependencies
 install:
-  - pip install . --use-mirrors
+  - pip install .
   - "if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2; fi"
 # command to run tests
 script: py.test
