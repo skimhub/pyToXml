@@ -1,7 +1,7 @@
 [![Build Status](https://secure.travis-ci.org/skimhub/pyToXml.png?branch=master)](http://travis-ci.org/skimhub/pyToXml)
-[![Downloads](https://pypip.in/d/pyToXml/badge.png)](https://pypi.python.org/pypi/pyToXml/)
-[![Latest Version](https://pypip.in/v/pyToXml/badge.png)](https://pypi.python.org/pypi/pyToXml/)
-[![Wheel Status](https://pypip.in/wheel/pyToXml/badge.png)](https://pypi.python.org/pypi/pyToXml/)
+[![Downloads](https://img.shields.io/pypi/dm/pyToXml.svg)](https://pypi.python.org/pypi/pyToXml/)
+[![Latest Version](https://img.shields.io/pypi/v/pyToXml.svg)](https://pypi.python.org/pypi/pyToXml/)
+[![Wheel Status](https://img.shields.io/pypi/wheel/pyToXml.svg)](https://pypi.python.org/pypi/pyToXml/)
 
 # Python Versions
 
